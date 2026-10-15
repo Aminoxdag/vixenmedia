@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="referrer" content="no-referrer">
+<title>Vixen Filmography</title>
+<style>
+:root{--bg:#000;--s1:#080807;--s2:#11100f;--bd:#1d1b18;--tx:#ebe7de;--mut:#7f7b72;--ac:#c6a96b;--er:#d9695a;color-scheme:dark;--serif:Georgia,"Iowan Old Style","Noto Naskh Arabic",serif}
+body.dim{--bg:#0e0e10;--s1:#141416;--s2:#1b1b1e;--bd:#28282c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic",sans-serif}
+button,input,select{font:inherit;color:inherit}button{background:none;border:0;cursor:pointer}
+#app{max-width:760px;margin:auto;min-height:100vh}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:6px 10px;padding-top:calc(6px + env(safe-area-inset-top));background:linear-gradient(var(--bg) 70%,transparent)}
+header h1{flex:1;margin:0;font:400 19px var(--serif);color:var(--ac);letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hi button,.back{width:44px;height:44px;border-radius:50%;color:var(--mut);font-size:19px}
+main{padding:8px 18px 120px;transition:padding .4s ease}
+main.idle{padding-top:26vh}
+.mark{display:none;text-align:center;font:400 38px var(--serif);letter-spacing:.14em;color:var(--ac);margin-bottom:34px}
+main.idle .mark{display:block}
+.top{position:sticky;top:calc(8px + env(safe-area-inset-top));z-index:15;display:flex;gap:6px;align-items:center;padding-inline:16px 4px;background:var(--s2);border:1px solid var(--bd);border-radius:28px;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:border-color .25s,box-shadow .25s}
+.top::before{content:"";width:20px;height:20px;flex:none;opacity:.75;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c6a96b' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='m16 16 4.5 4.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.top:focus-within{border-color:var(--ac)}
+.inp{width:100%;min-height:46px;padding:0 12px;border-radius:10px;border:1px solid var(--bd);background:var(--s2);outline:0}
+.sbar{border:0;background:transparent;font-size:19px;min-height:58px;padding:0 4px;border-radius:0;flex:1}
+.fbtn{display:none;width:48px;height:48px;color:var(--ac);align-items:center;justify-content:center;position:relative;flex:none}
+.top.act .fbtn{display:flex}
+.fbtn .badge{position:absolute;top:2px;inset-inline-end:0;margin:0}
+.badge{background:var(--ac);color:#000;border-radius:9px;padding:0 7px;font-size:11px;font-weight:700;margin-inline-start:8px}
+.hist{display:none;margin-top:22px;text-align:center}.top:focus-within~#res .hist{display:block}
+.sheet{margin-top:14px}
+.seg{display:flex;margin:6px 0 12px;border-bottom:1px solid var(--bd)}
+.seg button{flex:1;min-height:44px;color:var(--mut);border-bottom:2px solid transparent;margin-bottom:-1px}
+.seg button.on{color:var(--ac);border-color:var(--ac)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{min-height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--bd);display:inline-flex;align-items:center}
+.btn.p{border-color:var(--ac);color:var(--ac)}
+.chip{min-height:38px;padding:0 15px;border-radius:19px;border:1px solid var(--bd);display:inline-flex;align-items:center;margin:0 0 8px 8px;font-size:14px;color:#c9c5bb}
+.chip.on{border-color:var(--ac);color:var(--ac)}
+.panel{background:var(--s1);border:1px solid var(--bd);border-radius:14px;margin:10px 0}
+.ph0{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:50px;padding:0 16px}
+.pbody{padding:0 16px 14px;border-top:1px solid var(--bd)}
+.sl label{display:flex;align-items:center;gap:14px;min-height:50px;border-bottom:1px solid var(--bd)}.sl label:last-child{border:0}
+.sl input,#hu{width:22px;height:22px;accent-color:var(--ac)}
+.sl small{color:var(--mut);display:block;font-size:12px}
+.note,.meta,.dim2{color:var(--mut);font-size:13px}.note{margin:8px 0}
+h2{font:400 16px var(--serif);color:var(--ac);letter-spacing:.05em;margin:30px 0 12px;display:flex;align-items:center;gap:12px}
+h2::after{content:"";flex:1;height:1px;background:var(--bd)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 14px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{cursor:pointer;min-width:0}
+.card h3{font:400 15px/1.35 var(--serif);margin:9px 0 3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pf{font-size:12.5px;color:#a9a59b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.im{position:relative;aspect-ratio:16/9;background:var(--s2);overflow:hidden;border-radius:8px}
+.im img{width:100%;height:100%;object-fit:cover;display:block}
+.im.ph::after{content:"";position:absolute;inset:0;background:var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2358544a' stroke-width='1.2'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='m3 16 5-5 4 4 3-3 6 6'/%3E%3C/svg%3E") center/34px no-repeat}
+.list{display:flex;flex-direction:column;gap:16px}.list .card{display:flex;gap:14px}.list .iw{width:140px;flex:none}.list .cb{flex:1;min-width:0}.list h3{margin-top:0}
+.hs{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.pc{width:100px;flex:none;cursor:pointer}.pc .im{aspect-ratio:3/4}.pc p{margin:7px 0 0;font:400 13px/1.3 var(--serif)}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 12px}.pg .pc{width:auto}
+@media(min-width:560px){.pg{grid-template-columns:repeat(5,1fr)}}
+.sk{background:linear-gradient(90deg,var(--s2),var(--s1),var(--s2));background-size:200% 100%;animation:sh 1.3s infinite linear;display:block}
+i.sk{height:12px;border-radius:6px;margin:7px 0}i.sk.s{width:55%}
+@keyframes sh{to{background-position:-200% 0}}
+.err{border:1px solid #4a231d;border-radius:12px;padding:12px;margin:14px 0;color:#e8a99f;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.empty{text-align:center;color:var(--mut);padding:36px 10px}.lnk{color:var(--ac);min-height:44px;padding:0 6px}
+.cover{position:relative;margin:0 -18px}.cover .im{border-radius:0;aspect-ratio:16/10}
+.cover::after{content:"";position:absolute;inset:auto 0 0;height:60%;background:linear-gradient(transparent,var(--bg))}
+.ttl{display:block;font:400 27px/1.25 var(--serif);color:var(--tx);letter-spacing:0;margin:-34px 0 6px;position:relative;z-index:2}.ttl::after{display:none}
+.phero{text-align:center;padding-top:6px}.phero .im{width:150px;aspect-ratio:3/4;margin:0 auto 16px;border-radius:12px}
+.phero h2{display:block;font-size:28px;color:var(--tx);margin:0 0 4px;letter-spacing:0}.phero h2::after{display:none}
+.stat{display:inline-block;margin:10px 4px 0;padding:3px 14px;border:1px solid var(--bd);border-radius:14px;font-size:13px;color:var(--ac)}
+.kv{display:grid;grid-template-columns:auto 1fr;font-size:14px;margin:6px 0}
+.kv dt,.kv dd{margin:0;padding:10px 0;border-bottom:1px solid var(--bd)}.kv dt{color:var(--mut);padding-inline-end:20px;text-transform:capitalize}
+.set{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--bd)}
+.set select,.set .inp{width:auto;min-height:44px}
+.dbg{font:11px/1.5 ui-monospace,monospace;color:var(--mut);background:var(--s1);padding:10px;border-radius:10px;overflow:auto;max-height:220px;direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-all}
+.logo{width:44px;height:44px;border-radius:10px;background:var(--s2);object-fit:contain;flex:none}
+.srow{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--bd);cursor:pointer}
+.badge.scount{min-width:18px;text-align:center}
+@media(prefers-reduced-motion:reduce){.sk{animation:none}main{transition:none}}
+/* ===== app feel ===== */
+html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
+.card,.pc,.srow,.chip,.btn,.seg button,.ph0{touch-action:manipulation;transition:transform .16s ease,background .2s,border-color .2s,color .2s}
+.card:active,.pc:active{transform:scale(.965)}
+.srow:active,.chip:active,.btn:active{transform:scale(.97)}
+#app>main:first-child{padding-top:calc(10px + env(safe-area-inset-top))}
+#app>main.idle:first-child{padding-top:26vh}
+.back,.hi button{background:color-mix(in srgb,var(--s2) 72%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.fav.on{color:#e0707a}.fav.on svg{fill:currentColor;animation:pop .38s ease}
+@keyframes pop{40%{transform:scale(1.35)}}
+@keyframes vin{from{opacity:0;transform:translateX(calc(var(--d,0)*28px))}}
+main.vin{animation:vin .36s cubic-bezier(.22,.9,.3,1)}
+.im{border-radius:11px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.im img{opacity:0;transition:opacity .45s ease}.im img.ok{opacity:1}
+.iw{position:relative}
+.dur{position:absolute;inset-block-end:6px;inset-inline-end:6px;padding:1px 8px;border-radius:8px;font-size:11px;color:#eee;background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.chip.on{background:rgba(198,169,107,.13)}
+.panel>.set{padding:12px 0}.panel>.set:last-child{border:0}
+.set select{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:0 10px}
+.srow{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+#nav{position:fixed;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;margin:0 auto;width:min(420px,calc(100% - 24px));display:flex;padding:4px 6px;border-radius:28px;border:1px solid var(--bd);background:color-mix(in srgb,var(--s1) 80%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 12px 34px rgba(0,0,0,.6)}
+#nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;font-size:11px;color:var(--mut);border-radius:22px;transition:color .2s,background .2s,transform .15s}
+#nav button svg{transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
+#nav button.on{color:var(--ac);background:rgba(198,169,107,.1)}#nav button.on svg{transform:translateY(-1px) scale(1.12)}
+#nav button:active{transform:scale(.92)}
+@media(prefers-reduced-motion:reduce){main.vin,.fav.on svg{animation:none}.im img{transition:none}}
+
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+'use strict';
+/* ================= CONFIG ================= */
+const BASE = 'https://api.theporndb.net';
+const DEFAULT_TOKEN = 'anB4dGD3YVJ2pAVQhlmHpTE1qDMSfxlA0JYF9KOHfc6e8cac'; // can be overridden in Settings
+const LS = 'vmf-v1';
+
+/* Studio catalog: names/aliases only. IDs are resolved from the live /sites endpoint (never guessed). */
+const CATALOG = [
+  {key:'vixen',name:'Vixen',aliases:['vixen']},
+  {key:'blacked',name:'BLACKED',aliases:['blacked']},
+  {key:'blackedraw',name:'BLACKEDraw',aliases:['blackedraw','blacked raw']},
+  {key:'tushy',name:'TUSHY',aliases:['tushy']},
+  {key:'tushyraw',name:'TUSHY Raw',aliases:['tushyraw','tushy raw']},
+  {key:'deeper',name:'DEEPER',aliases:['deeper']},
+  {key:'slayed',name:'Slayed',aliases:['slayed']},
+  {key:'milfy',name:'Milfy',aliases:['milfy']},
+  {key:'tabooheat',name:'Taboo Heat',aliases:['tabooheat','taboo heat']}
+];
+
+/* ================= i18n ================= */
+const T = {
+ar:{tags:'الوسوم',director:'المخرج',cast:'الأداء',trailer:'العرض التشويقي',total:'مشهد',workedWith:'عملت مع',age:'العمر',gallery:'صور',years:'السنوات',home:'الرئيسية',search:'بحث',studios:'الاستوديوهات',favs:'المفضلة',settings:'الإعدادات',scenes:'المشاهد',performers:'الأداء',all:'الكل',
+ searchPh:'ابحث عن اسم أو عنوان…',recentP:'شوهد مؤخراً: أسماء',recentS:'شوهد مؤخراً: مشاهد',quick:'استوديوهات سريعة',recentSearch:'عمليات البحث الأخيرة',
+ clear:'مسح',noRes:'لا توجد نتائج.',selAll:'تحديد الكل',clearAll:'إلغاء الكل',vmg:'مجموعة Vixen',studioFind:'ابحث في الاستوديوهات',selected:'محدد',
+ reset:'إعادة ضبط الفلاتر',hideUnk:'إخفاء المشاهد بدون استوديو',sort:'الترتيب (على النتائج المحمّلة)',rel:'الأكثر صلة',newest:'الأحدث',oldest:'الأقدم',az:'أ-ي / A-Z',
+ year:'السنة',minRun:'أقل مدة (دقيقة)',more:'تحميل المزيد',retry:'إعادة المحاولة',lang:'اللغة',theme:'المظهر',defType:'نوع البحث الافتراضي',
+ saveDef:'حفظ التحديد الحالي كافتراضي',layout:'العرض',grid:'شبكة',list:'قائمة',token:'مفتاح API',saveTok:'حفظ',clearHist:'مسح سجل البحث',
+ clearCache:'مسح الكاش والبيانات المخزنة',debug:'سجل التصحيح',bio:'نبذة',aliases:'أسماء أخرى',details:'التفاصيل',source:'فتح الصفحة المصدر',min:'د',
+ notFound:'غير موجود في ThePornDB',resolving:'جاري جلب سجلات الاستوديوهات…',refresh:'تحديث السجلات',studioNote:'الفلتر يُطبَّق على المشاهد فقط (يتم عبر site_id في الخادم ثم يُتحقق منه محلياً).',
+ filmo:'الأعمال',noFav:'لا يوجد شيء محفوظ.',oled:'OLED أسود',dim:'رمادي داكن',advanced:'فلاتر وترتيب',showAll:'عرض كل الأسماء',
+ e_auth:'المفتاح غير صالح أو منتهي (401/403). حدّثه من الإعدادات.',e_rate:'تم تجاوز حد الطلبات. انتظر قليلاً ثم أعد المحاولة.',e_timeout:'انتهت مهلة الطلب.',
+ e_network:'تعذر الاتصال. تحقق من الإنترنت، أو قد يمنع الخادم الطلب من هذا المصدر (CORS).',e_http:'خطأ من الخادم:',e_notoken:'لا يوجد مفتاح API.',
+ emptyHist:'اكتب للبحث. سيظهر سجل بحثك هنا.',hist:'سجل البحث',unresolved:'الاستوديو غير محلول',tapStudio:'عرض مشاهد الاستوديو',children:'علامات فرعية',
+ pAll:'تحقق: لا يوجد استوديو محدد = كل الاستوديوهات',date:'التاريخ',studio:'الاستوديو',idl:'المعرّف',cachedAt:'آخر تحديث'},
+en:{tags:'Tags',director:'Director',cast:'Cast',trailer:'Trailer',total:'scenes',workedWith:'Worked with',age:'Age',gallery:'Photos',years:'Years',home:'Home',search:'Search',studios:'Studios',favs:'Favorites',settings:'Settings',scenes:'Scenes',performers:'Performers',all:'All',
+ searchPh:'Search a name or title…',recentP:'Recently viewed: performers',recentS:'Recently viewed: scenes',quick:'Quick studios',recentSearch:'Recent searches',
+ clear:'Clear',noRes:'No results.',selAll:'Select all',clearAll:'Clear all',vmg:'Vixen Media Group',studioFind:'Search studios',selected:'selected',
+ reset:'Reset filters',hideUnk:'Hide scenes with no studio',sort:'Sort (loaded results)',rel:'Relevance',newest:'Newest',oldest:'Oldest',az:'A-Z',
+ year:'Year',minRun:'Min runtime (min)',more:'Load more',retry:'Retry',lang:'Language',theme:'Theme',defType:'Default search type',
+ saveDef:'Save current selection as default',layout:'Layout',grid:'Grid',list:'List',token:'API token',saveTok:'Save',clearHist:'Clear search history',
+ clearCache:'Clear cache and stored metadata',debug:'Debug log',bio:'Bio',aliases:'Alternate names',details:'Details',source:'Open source page',min:'min',
+ notFound:'Not found on ThePornDB',resolving:'Fetching studio records…',refresh:'Refresh records',studioNote:'Studio filtering applies to scenes only (server-side via site_id, then verified locally).',
+ filmo:'Filmography',noFav:'Nothing saved yet.',oled:'OLED black',dim:'Dark gray',advanced:'Filters & sort',showAll:'Show all performers',
+ e_auth:'Token rejected or expired (401/403). Update it in Settings.',e_rate:'Rate limit reached. Wait a moment, then retry.',e_timeout:'The request timed out.',
+ e_network:'Could not connect. Check your network, or the API may block requests from this origin (CORS).',e_http:'Server error:',e_notoken:'No API token set.',
+ emptyHist:'Type to search. Your search history appears here.',hist:'Search history',unresolved:'Studio not resolved',tapStudio:'Browse studio scenes',children:'Child brands',
+ pAll:'No studio selected = all studios',date:'Date',studio:'Studio',idl:'ID',cachedAt:'Updated'}
+};
+
+/* ================= STATE ================= */
+const DEF = {lang:'ar',theme:'oled',type:'all',view:'grid',sel:[],defSel:null,hideUnknown:false,token:'',hist:[],favP:{},favS:{},recP:[],recS:[],sites:null,sitesAt:0};
+let S = Object.assign({}, DEF);
+try { Object.assign(S, JSON.parse(localStorage.getItem(LS) || '{}')); } catch (e) {}
+if (S.defSel) S.sel = [...S.defSel];
+const save = () => { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} };
+const t = k => (T[S.lang] && T[S.lang][k]) || T.en[k] || k;
+const R = {q:'', sort:'rel', fy:'', fr:'', log:[], panel:true, ftab:'scenes', adv:false, resolving:false, siteErr:null};
+const SC = new Map(), PF = new Map(), PV = new Map(), ST = new Map();
+S.recS.forEach(s => SC.set(s.id, s));
+S.recP.forEach(p => PF.set(p.id, p));
+Object.values(S.favS).forEach(s => SC.set(s.id, s));
+Object.values(S.favP).forEach(p => PF.set(p.id, p));
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const tok = () => (S.token || DEFAULT_TOKEN).trim();
+
+/* ================= API CLIENT ================= */
+const E = (code, extra) => { const e = new Error(code); e.code = code; e.extra = extra; return e; };
+const cache = new Map();
+const dbg = m => { R.log.unshift(new Date().toLocaleTimeString() + ' ' + m); R.log.length = Math.min(R.log.length, 40); console.debug('[vmf]', m); };
+
+async function api(path, params = {}, o = {}) {
+  const qs = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) if (v !== '' && v != null) qs.set(k, v);
+  const url = BASE + path + (qs.toString() ? '?' + qs : '');
+  const ttl = o.ttl == null ? 300000 : o.ttl;
+  const c = cache.get(url);
+  if (ttl && c && Date.now() - c.t < ttl) return c.d;
+  if (!tok()) throw E('notoken');
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const ctl = new AbortController();
+    const to = setTimeout(() => ctl.abort('timeout'), 15000);
+    if (o.signal) { if (o.signal.aborted) throw E('abort'); o.signal.addEventListener('abort', () => ctl.abort('user'), {once:true}); }
+    const t0 = performance.now();
+    try {
+      const r = await fetch(url, {headers:{Authorization:'Bearer ' + tok(), Accept:'application/json'}, signal:ctl.signal});
+      dbg(r.status + ' ' + Math.round(performance.now() - t0) + 'ms ' + url.replace(BASE, ''));
+      if (r.status === 401 || r.status === 403) throw E('auth');
+      if (r.status === 429) {
+        const ra = Math.min(parseInt(r.headers.get('Retry-After') || '2', 10) || 2, 6);
+        if (attempt === 0) { await new Promise(res => setTimeout(res, ra * 1000)); continue; }
+        throw E('rate');
+      }
+      if (!r.ok) throw E('http', r.status);
+      const d = await r.json();
+      cache.set(url, {t:Date.now(), d});
+      if (cache.size > 200) cache.delete(cache.keys().next().value);
+      return d;
+    } catch (e) {
+      if (e.code) throw e;
+      if (e.name === 'AbortError') throw E(ctl.signal.reason === 'timeout' ? 'timeout' : 'abort');
+      dbg('ERR ' + e.message + ' ' + url.replace(BASE, ''));
+      throw E('network');
+    } finally { clearTimeout(to); }
+  }
+}
+const errMsg = e => e.code === 'http' ? t('e_http') + ' ' + e.extra : t('e_' + e.code) || e.message;
+const hasMore = d => (d.meta && d.meta.last_page != null) ? d.meta.current_page < d.meta.last_page : !!(d.links && d.links.next);
+
+/* ---------- Image normalization ---------- */
+function normUrl(u) {
+  if (typeof u !== 'string') return '';
+  u = u.trim(); if (!u) return '';
+  if (u.startsWith('//')) return 'https:' + u;
+  if (u.startsWith('http://')) return 'https://' + u.slice(7);
+  if (u.startsWith('https://')) return u;
+  if (u.startsWith('/')) return BASE + u;
+  return '';
+}
+function pickImg(...a) {
+  for (const v of a) {
+    if (!v) continue;
+    if (typeof v === 'string') { const u = normUrl(v); if (u) return u; }
+    else if (Array.isArray(v)) { const u = pickImg(...v); if (u) return u; }
+    else if (typeof v === 'object') { const u = pickImg(v.large, v.medium, v.full, v.small, v.url, v.src); if (u) return u; }
+  }
+  return '';
+}
+
+/* ---------- Normalizers (no invented fields) ---------- */
+function normScene(s, full) {
+  const site = s.site || s.studio || null;
+  const o = {
+    id: String(s.id), title: s.title || '', date: s.date || '', year: s.date ? String(s.date).slice(0, 4) : '',
+    mins: s.duration ? Math.round(s.duration / 60) : 0, desc: s.description || '', url: s.url || '',
+    img: pickImg(s.poster, s.image, s.background),
+    studio: site ? {id: site.id != null ? String(site.id) : '', name: site.name || site.short_name || '', logo: pickImg(site.logo, site.favicon), parent_id: site.parent_id != null ? String(site.parent_id) : ''} : null,
+    bg: pickImg(s.background), tags: (s.tags || []).map(x => typeof x === 'string' ? x : x && x.name).filter(Boolean), director: s.director || '', trailer: normUrl(s.trailer || ''), full: !!full,
+    perfs: (s.performers || []).map(p => ({id: String(p.id), name: p.name || (p.parent && p.parent.name) || '', img: pickImg(p.image, p.thumbnail, p.face, p.poster)}))
+  };
+  o.perfs.forEach(p => { if (!PF.has(p.id)) PF.set(p.id, p); });
+  SC.set(o.id, o);
+  return o;
+}
+function normPerf(p) {
+  const al = (p.aliases || []).map(a => typeof a === 'string' ? a : (a && a.name)).filter(Boolean);
+  const o = {id: String(p.id), name: p.name || '', img: pickImg(p.image, p.thumbnail, p.poster, p.face), aliases: al, bio: p.bio || '', extras: p.extras || {}, gallery: (Array.isArray(p.posters) ? p.posters : []).map(x => pickImg(x)).filter(Boolean)};
+  const prev = PF.get(o.id) || {};
+  PF.set(o.id, Object.assign({}, prev, o, {img: o.img || prev.img || ''}));
+  return PF.get(o.id);
+}
+
+/* ---------- Studios: resolve real IDs from /sites ---------- */
+async function resolveStudios(force) {
+  if (!force && S.sites && Date.now() - S.sitesAt < 6048e5) return;
+  R.resolving = true; R.siteErr = null; refreshStudioUI();
+  try {
+    const res = await Promise.all(CATALOG.map(c => api('/sites', {q:c.name, per_page:25}, {ttl:0}).then(d => ({c, d:d.data || []})).catch(e => ({c, e}))));
+    if (res.every(r => r.e)) throw res[0].e;
+    const all = []; res.forEach(r => (r.d || []).forEach(x => all.push(x)));
+    const sites = {};
+    for (const r of res) {
+      const set = new Set(r.c.aliases.map(norm));
+      const m = (r.d || []).filter(x => [x.name, x.short_name, x.slug].some(v => v && set.has(norm(v))));
+      const ids = [...new Set(m.map(x => String(x.id)))];
+      const kids = [...new Set(all.filter(x => !ids.includes(String(x.id)) && x.parent_id != null && ids.includes(String(x.parent_id))).map(x => String(x.id)))];
+      sites[r.c.key] = {ids, kids, recs: m.map(x => ({id:String(x.id), name:x.name, logo:normUrl(x.logo) || normUrl(x.favicon), url:x.url || '', parent_id:x.parent_id != null ? String(x.parent_id) : ''}))};
+    }
+    S.sites = sites; S.sitesAt = Date.now(); save();
+  } catch (e) { R.siteErr = e; }
+  R.resolving = false; refreshStudioUI();
+}
+const effSel = () => S.sel.filter(k => S.sites && S.sites[k] && S.sites[k].ids.length);
+function idsFor(keys, withKids = true) {
+  const a = [];
+  keys.forEach(k => { const s = S.sites && S.sites[k]; if (s) { a.push(...s.ids); if (withKids) a.push(...s.kids); } });
+  return [...new Set(a)];
+}
+function studioOK(sc, keys) {
+  if (S.hideUnknown && !sc.studio) return false;
+  if (!keys.length) return true;
+  if (!sc.studio) return false;
+  const set = new Set(idsFor(keys));
+  return set.has(sc.studio.id) || (sc.studio.parent_id && set.has(sc.studio.parent_id));
+}
+
+/* ---------- Data fetchers ---------- */
+async function fetchScenes({q, page, signal, keys}) {
+  keys = (keys || effSel());
+  if (!keys.length) {
+    const d = await api('/scenes', {q, page, per_page:24}, {signal});
+    return {items:(d.data || []).map(normScene).filter(s => studioOK(s, [])), more:hasMore(d), page};
+  }
+  const ids = idsFor(keys);
+  const rs = await Promise.allSettled(ids.map(id => api('/scenes', {q, site_id:id, page, per_page:24}, {signal})));
+  const ok = rs.filter(r => r.status === 'fulfilled').map(r => r.value);
+  if (!ok.length) throw rs[0].reason;
+  const seen = new Set(), items = [];
+  ok.forEach(d => (d.data || []).map(normScene).forEach(s => { if (!seen.has(s.id) && studioOK(s, keys)) { seen.add(s.id); items.push(s); } }));
+  return {items, more:ok.some(hasMore), page};
+}
+async function fetchPerformers(q, page, signal) {
+  const d = await api('/performers', {q, page, per_page:24}, {signal});
+  return {items:(d.data || []).map(normPerf), more:hasMore(d), page};
+}
+async function fetchFilmo(id, page, signal) {
+  const keys = effSel(); let out = [], p = page, more = true, n = 0, total;
+  while (more && n < 4) {
+    let d;
+    try { d = await api('/performers/' + encodeURIComponent(id) + '/scenes', {page:p, per_page:24}, {signal}); }
+    catch (e) { if (e.code === 'http' && e.extra === 404) d = await api('/scenes', {performer_id:id, page:p, per_page:24}, {signal}); else throw e; }
+    more = hasMore(d); total = d.meta && d.meta.total; p++; n++;
+    out.push(...(d.data || []).map(normScene).filter(s => studioOK(s, keys)));
+    if (out.length >= 12) break;
+  }
+  return {items:out, more, page:p - 1, total};
+}
+
+/* ---------- Paginated feed with cancellation ---------- */
+class Feed {
+  constructor(fn, cb) { this.fn = fn; this.cb = cb; this.reset(); }
+  reset() { if (this.ctl) this.ctl.abort(); this.items = []; this.page = 0; this.more = true; this.busy = false; this.err = null; }
+  async next() {
+    if (this.busy || !this.more || this.err) return;
+    this.busy = true; const ctl = this.ctl = new AbortController(); this.cb();
+    try {
+      const r = await this.fn(this.page + 1, ctl.signal);
+      if (ctl !== this.ctl) return;
+      const seen = new Set(this.items.map(i => i.id));
+      this.items.push(...r.items.filter(i => !seen.has(i.id)));
+      this.page = r.page; this.more = r.more; if (r.total != null) this.total = r.total; this.loaded = true;
+    } catch (e) { if (ctl !== this.ctl || e.code === 'abort') return; this.err = e; }
+    finally { if (ctl === this.ctl) { this.busy = false; this.cb(); } }
+  }
+}
+R.sf = new Feed((p, s) => fetchScenes({q:R.q, page:p, signal:s}), () => updateRes());
+R.pf = new Feed((p, s) => fetchPerformers(R.q, p, s), () => updateRes());
+let W = null;
+const obs = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting) && W) W.next(); }, {rootMargin:'400px'});
+const watch = () => { obs.disconnect(); const s = $('#sent'); if (s && W) obs.observe(s); };
+
+/* ================= VIEW HELPERS ================= */
+const LOADED = new Set();
+document.addEventListener('load', e => { const el = e.target; if (el && el.tagName === 'IMG') { el.classList.add('ok'); LOADED.add(el.getAttribute('src')); } }, true);
+const im = (src, cls = '') => `<div class="im ${cls}${src ? '' : ' ph'}">${src ? `<img class="${LOADED.has(src) ? 'ok' : ''}" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="${esc(src)}" alt="">` : ''}</div>`;
+document.addEventListener('error', e => {
+  const el = e.target;
+  if (el && el.tagName === 'IMG') { dbg('IMG FAIL ' + (el.src || '').slice(0, 90)); const w = el.parentNode; el.remove(); if (w) w.classList.add('ph'); }
+}, true);
+
+const sceneCard = s => `<article class="card" data-act="scene" data-id="${esc(s.id)}"><div class="iw">${im(s.img)}${s.mins ? `<span class="dur">${s.mins} ${t('min')}</span>` : ''}</div><div class="cb"><h3>${esc(s.title)}</h3>
+<div class="meta">${esc([s.studio && s.studio.name, s.year].filter(Boolean).join('  /  '))}${s.mins ? ' &nbsp;' + s.mins + ' ' + t('min') : ''}</div>
+${s.perfs.length ? `<div class="pf">${esc(s.perfs.slice(0, 3).map(p => p.name).join('، '))}</div>` : ''}</div></article>`;
+const perfCard = p => `<div class="pc" data-act="perf" data-id="${esc(p.id)}">${im(p.img, 'pi')}<p>${esc(p.name)}</p></div>`;
+const skel = n => `<div class="${S.view === 'list' ? 'list' : 'grid'}">${'<div class="card"><div class="iw"><div class="im sk"></div></div><div class="cb"><i class="sk"></i><i class="sk s"></i></div></div>'.repeat(n)}</div>`;
+const errBox = (e, name) => `<div class="err"><span>${esc(errMsg(e))}</span><button class="btn" data-act="retry" data-f="${name}">${t('retry')}</button></div>`;
+
+function feedHTML(f, name, items, fn, wrap, empty) {
+  let h = items.length ? `<div class="${wrap || (S.view === 'list' ? 'list' : 'grid')}">${items.map(fn).join('')}</div>` : '';
+  if (f.busy) h += skel(items.length ? 2 : 6);
+  if (f.err) h += errBox(f.err, name);
+  else if (!f.busy && !f.more && !items.length && f.loaded) h += `<p class="empty">${empty || t('noRes')}</p>`;
+  if (f.more && !f.err && !f.busy) h += '<div id="sent" style="height:40px"></div>';
+  W = f; return h;
+}
+function visible(items) {
+  let a = items.slice();
+  const y = parseInt(R.fy, 10), r = parseInt(R.fr, 10);
+  if (y) a = a.filter(s => s.year === String(y));
+  if (r) a = a.filter(s => s.mins >= r);
+  if (R.sort === 'new') a.sort((x, z) => (z.date || '').localeCompare(x.date || ''));
+  if (R.sort === 'old') a.sort((x, z) => (x.date || '9').localeCompare(z.date || '9'));
+  if (R.sort === 'az') a.sort((x, z) => x.title.localeCompare(z.title));
+  return a;
+}
+function addHist(q) { if (!q || q.length < 2) return; S.hist = [q, ...S.hist.filter(h => h !== q)].slice(0, 15); save(); }
+
+/* ---- Studio filter panel ---- */
+function listHTML(filter = '') {
+  const f = norm(filter);
+  return CATALOG.filter(c => !f || norm(c.name).includes(f)).map(c => {
+    const s = S.sites && S.sites[c.key]; const ok = s && s.ids.length;
+    return `<label><input type="checkbox" class="cbst" data-k="${c.key}" ${S.sel.includes(c.key) ? 'checked' : ''} ${ok ? '' : 'disabled'}><span>${esc(c.name)}<small>${ok ? t('idl') + ': ' + esc(s.ids.join(', ')) : (R.resolving ? t('resolving') : t('unresolved'))}</small></span></label>`;
+  }).join('');
+}
+function panelHTML() {
+  return `<div class="panel" id="sp"><button class="ph0" data-act="panel"><span>${t('studios')}<span class="badge scount">${S.sel.length}</span></span><span>${R.panel ? '▴' : '▾'}</span></button>
+${R.panel ? `<div class="pbody"><div class="row" style="margin:10px 0"><input id="ss" class="inp" placeholder="${t('studioFind')}" style="flex:1 1 100%"></div>
+<div class="row"><button class="btn" data-act="selall">${t('selAll')}</button><button class="btn" data-act="selnone">${t('clearAll')}</button><button class="btn" data-act="vmg">${t('vmg')}</button><button class="btn" data-act="resetf">${t('reset')}</button></div>
+<div class="sl" id="sl">${listHTML()}</div>
+<label class="row" style="min-height:44px"><input type="checkbox" id="hu" ${S.hideUnknown ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--ac)"><span>${t('hideUnk')}</span></label>
+<p class="note">${t('pAll')}. ${t('studioNote')}</p>${R.siteErr ? `<div class="err">${esc(errMsg(R.siteErr))}<button class="btn" data-act="resolve">${t('retry')}</button></div>` : ''}</div>` : ''}</div>`;
+}
+function refreshStudioUI() {
+  const l = $('#sl'); if (l) l.innerHTML = listHTML(($('#ss') || {}).value || '');
+  document.querySelectorAll('.scount').forEach(e => e.textContent = S.sel.length);
+  if (cur().v === 'studios') render();
+}
+function onFilter() {
+  const v = cur().v;
+  if (v === 'search') runSearch(true);
+  if (v === 'perf') { PV.forEach(p => p.feed.reset()); const p = getPV(cur().a); p.feed.next(); updatePV(); }
+  if (v === 'home') render();
+}
+
+/* ================= VIEWS ================= */
+let stack = [{v:'home'}];
+const cur = () => stack[stack.length - 1];
+let ANIM = null;
+function go(v, a) { cur().y = scrollY; stack.push({v, a}); history.pushState({}, ''); ANIM = 1; render(); scrollTo(0, 0); }
+function root(v) { stack = [{v}]; ANIM = 0; render(); scrollTo(0, 0); }
+window.addEventListener('popstate', () => { if (stack.length > 1) { stack.pop(); ANIM = -1; render(); scrollTo(0, cur().y || 0); } });
+
+const HEART = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 21s-8-5-9.5-10A5 5 0 0 1 12 7a5 5 0 0 1 9.5 4C20 16 12 21 12 21z"/></svg>';
+const NAVI = {search:'<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>', studios:'<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>', favs:'<path d="M12 21s-8-5-9.5-10A5 5 0 0 1 12 7a5 5 0 0 1 9.5 4C20 16 12 21 12 21z"/>', settings:'<path d="M4 7h8M18 7h2M4 17h2M12 17h8"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>'};
+const navHTML = c => `<nav id="nav">${Object.keys(NAVI).map(k => `<button class="${c.v === k ? 'on' : ''}" data-act="nav" data-v="${k}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${NAVI[k]}</svg><span>${t(k)}</span></button>`).join('')}</nav>`;
+function favsV() {
+  const s = Object.values(S.favS).reverse(), p = Object.values(S.favP).reverse();
+  if (!s.length && !p.length) return `<p class="empty">${t('noFav')}</p>`;
+  return (p.length ? `<h2>${t('performers')}</h2><div class="pg">${p.map(perfCard).join('')}</div>` : '') + (s.length ? `<h2>${t('scenes')}</h2><div class="${S.view === 'list' ? 'list' : 'grid'}">${s.map(sceneCard).join('')}</div>` : '');
+}
+function render() {
+  document.documentElement.lang = S.lang; document.documentElement.dir = S.lang === 'ar' ? 'rtl' : 'ltr';
+  document.body.className = S.theme === 'dim' ? 'dim' : '';
+  const c = cur(); if (c.v === 'home') c.v = 'search';
+  const sub = stack.length > 1; let title = '', body = '';
+  if (c.v === 'search') body = searchV();
+  else if (c.v === 'studios') { title = t('studios'); body = studiosV(); }
+  else if (c.v === 'settings') { title = t('settings'); body = settingsV(); }
+  else if (c.v === 'favs') { title = t('favs'); body = favsV(); }
+  else if (c.v === 'scene') { body = sceneV(SC.get(c.a)); loadFull(c.a); }
+  else if (c.v === 'perf') { title = (PF.get(c.a) || {}).name || ''; body = perfV(c.a); }
+  else if (c.v === 'studio') { title = (CATALOG.find(x => x.key === c.a) || {}).name || ''; body = studioV(c.a); }
+  const idle = c.v === 'search' && !(R.q || effSel().length);
+  const fv = (c.v === 'scene' || c.v === 'perf') ? `<button class="fav ${(c.v === 'scene' ? S.favS : S.favP)[c.a] ? 'on' : ''}" data-act="fav" aria-label="fav">${HEART}</button>` : '';
+  const hdr = (sub || c.v !== 'search') ? `<header>${sub ? `<button class="back" data-act="back" aria-label="back">${S.lang === 'ar' ? '→' : '←'}</button>` : ''}<h1>${esc(title)}</h1><div class="hi">${fv}</div></header>` : '';
+  $('#app').innerHTML = `${hdr}<main id="main" class="${idle ? 'idle' : ''}">${body}</main>${sub ? '' : navHTML(c)}`;
+  if (ANIM !== null) { const m = $('#main'); m.style.setProperty('--d', ANIM * (S.lang === 'ar' ? -1 : 1)); m.classList.add('vin'); ANIM = null; }
+  if (c.v === 'search') updateRes();
+  if (c.v === 'perf') updatePV();
+  if (c.v === 'studio') updateST();
+}
+const FULL = new Set();
+function loadFull(id) {
+  if (FULL.has(id)) return; FULL.add(id);
+  api('/scenes/' + encodeURIComponent(id)).then(d => { normScene(d.data || d, true); if (cur().v === 'scene' && cur().a === id) render(); }).catch(() => {});
+}
+
+function homeV() {
+  const chips = CATALOG.map(c => `<button class="chip ${S.sel.includes(c.key) ? 'on' : ''}" data-act="quick" data-k="${c.key}">${esc(c.name)}</button>`).join('');
+  return `<h2 style="margin-top:4px">${t('quick')}</h2><div>${chips}</div>
+${S.hist.length ? `<h2>${t('recentSearch')}</h2><div>${S.hist.slice(0, 8).map(h => `<button class="chip" data-act="hq" data-q="${esc(h)}">${esc(h)}</button>`).join('')}</div>` : ''}
+${S.recP.length ? `<h2>${t('recentP')}</h2><div class="hs">${S.recP.map(perfCard).join('')}</div>` : ''}
+${S.recS.length ? `<h2>${t('recentS')}</h2><div class="${S.view === 'list' ? 'list' : 'grid'}">${S.recS.slice(0, 8).map(sceneCard).join('')}</div>` : ''}
+${!S.recP.length && !S.recS.length && !S.hist.length ? `<p class="empty">${t('emptyHist')}</p>` : ''}`;
+}
+function filtHTML() {
+  return `<div class="sheet"><div class="seg">${['all','scenes','performers'].map(k => `<button data-act="type" data-k="${k}" class="${S.type === k ? 'on' : ''}">${t(k)}</button>`).join('')}</div>
+${panelHTML()}
+<div class="panel"><button class="ph0" data-act="adv"><span>${t('advanced')}</span><span>${R.adv ? '▴' : '▾'}</span></button>${R.adv ? `<div class="pbody"><div class="set"><span>${t('sort')}</span><select id="sort">${[['rel','rel'],['new','newest'],['old','oldest'],['az','az']].map(([v, k]) => `<option value="${v}" ${R.sort === v ? 'selected' : ''}>${t(k)}</option>`).join('')}</select></div>
+<div class="set"><span>${t('year')}</span><input id="fy" class="inp" inputmode="numeric" maxlength="4" style="width:100px" value="${esc(R.fy)}"></div>
+<div class="set"><span>${t('minRun')}</span><input id="fr" class="inp" inputmode="numeric" maxlength="3" style="width:100px" value="${esc(R.fr)}"></div></div>` : ''}</div></div>`;
+}
+function searchV() {
+  const act = R.q || effSel().length;
+  return `<div class="mark">Filmography</div><div id="top" class="top ${act ? 'act' : ''}"><input id="q" class="inp sbar" type="search" enterkeyhint="search" autocomplete="off" placeholder="${t('searchPh')}" value="${esc(R.q)}">
+<button class="fbtn" data-act="filters" aria-label="filters"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h8M18 7h2M4 17h2M12 17h8"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg><span class="badge scount">${S.sel.length}</span></button></div>
+<div id="fpan">${R.fo ? filtHTML() : ''}</div><div id="res"></div>`;
+}
+function histHTML() {
+  if (!S.hist.length) return '';
+  return `<div class="hist">${S.hist.map(h => `<button class="chip" data-act="hq" data-q="${esc(h)}">${esc(h)}</button>`).join('')}<div><button class="lnk" data-act="clearhist">${t('clear')}</button></div></div>`;
+}
+function runSearch(fromState) {
+  if (!fromState) R.q = ($('#q') || {value:R.q}).value.trim();
+  R.sf.reset(); R.pf.reset();
+  const hasQ = !!R.q, hasSt = effSel().length > 0;
+  if (hasQ && S.type !== 'scenes') R.pf.next();
+  if ((hasQ || hasSt) && S.type !== 'performers') R.sf.next();
+  updateRes();
+}
+function updateRes() {
+  const el = $('#res'); if (!el) return;
+  const act = !!(R.q || effSel().length); const tp = $('#top'); if (tp) tp.classList.toggle('act', act); const mn = $('#main'); if (mn) mn.classList.toggle('idle', !act);
+  if (!act) { el.innerHTML = histHTML(); W = null; return; }
+  let h = ''; W = null;
+  if (S.type !== 'scenes' && R.q) {
+    const pf = R.pf;
+    h += `<h2>${t('performers')}</h2>`;
+    if (S.type === 'all') {
+      const sl = pf.items.slice(0, 12);
+      if (sl.length) h += `<div class="hs">${sl.map(perfCard).join('')}</div>`;
+      else if (pf.busy) h += `<div class="hs">${'<div class="pc"><div class="im sk"></div></div>'.repeat(5)}</div>`;
+      if (pf.err) h += errBox(pf.err, 'pf');
+      else if (!pf.busy && !sl.length && pf.loaded) h += `<p class="empty">${t('noRes')}</p>`;
+      if (pf.items.length > 12 || (pf.more && pf.items.length >= 12)) h += `<button class="lnk" data-act="type" data-k="performers">${t('showAll')}</button>`;
+    } else h += feedHTML(pf, 'pf', pf.items, perfCard, 'pg');
+  }
+  if (S.type !== 'performers') {
+    if (S.type === 'all' && R.q) h += `<h2>${t('scenes')}</h2>`;
+    h += feedHTML(R.sf, 'sf', visible(R.sf.items), sceneCard);
+  }
+  el.innerHTML = h; watch();
+}
+
+function getPV(id) {
+  if (!PV.has(id)) {
+    const p = {id, d:null, err:null, feed:new Feed((pg, s) => fetchFilmo(id, pg, s), () => updatePV())};
+    PV.set(id, p);
+    api('/performers/' + encodeURIComponent(id)).then(d => { p.d = normPerf(d.data || d); updatePV(); }).catch(e => { if (e.code !== 'abort') { p.err = e; updatePV(); } });
+    p.feed.next();
+  }
+  return PV.get(id);
+}
+function perfV(id) { getPV(id); return `<div id="pvh"></div>${panelHTML()}<h2>${t('filmo')}</h2><div id="pvf"></div>`; }
+function updatePV() {
+  const c = cur(); if (c.v !== 'perf') return;
+  const p = getPV(c.a), d = p.d || PF.get(c.a) || {id:c.a, name:'', img:'', aliases:[], bio:'', extras:{}, gallery:[]};
+  const h = $('#pvh'); if (!h) return;
+  const hd = document.querySelector('header h1'); if (hd && d.name) hd.textContent = d.name;
+  const ex = Object.entries(d.extras || {}).filter(([k, v]) => ['string', 'number', 'boolean'].includes(typeof v) && String(v).trim() !== '');
+  const items = p.feed.items, cnt = {}, yrs = items.map(s => +s.year).filter(Boolean);
+  items.forEach(s => { if (s.studio && s.studio.name) cnt[s.studio.name] = (cnt[s.studio.name] || 0) + 1; });
+  const studs = Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 12);
+  const bd = d.extras && d.extras.birthday; const age = bd && !isNaN(Date.parse(bd)) ? Math.floor((Date.now() - Date.parse(bd)) / 31557600000) : '';
+  const total = p.feed.total != null && !effSel().length ? `<span class="stat">${p.feed.total} ${t('total')}</span>` : '';
+  const yr = yrs.length ? `<span class="stat">${Math.min(...yrs)}–${Math.max(...yrs)}</span>` : '';
+  h.innerHTML = `<div class="phero">${im(d.img)}<h2>${esc(d.name)}</h2>
+${d.aliases && d.aliases.length ? `<div class="dim2">${esc(d.aliases.slice(0, 8).join('، '))}</div>` : ''}
+<div>${total}${yr}${age !== '' ? `<span class="stat">${t('age')} ${age}</span>` : ''}</div></div>
+${p.err ? errBox(p.err, 'pvd') : ''}
+${d.gallery && d.gallery.length ? `<h2>${t('gallery')}</h2><div class="hs">${d.gallery.slice(0, 10).map(g => `<div class="pc" style="width:120px">${im(g)}</div>`).join('')}</div>` : ''}
+${d.bio ? `<h2>${t('bio')}</h2><p style="margin:0;white-space:pre-line;color:#c3bfb5">${esc(d.bio)}</p>` : ''}
+${ex.length ? `<h2>${t('details')}</h2><dl class="kv">${ex.map(([k, v]) => `<dt>${esc(k.replace(/_/g, ' '))}</dt><dd>${esc(typeof v === 'boolean' ? (v ? '✓' : '—') : v)}</dd>`).join('')}</dl>` : ''}
+${studs.length ? `<h2>${t('workedWith')}</h2><div>${studs.map(([n, k]) => `<span class="chip">${esc(n)} ${k}</span>`).join('')}</div>` : ''}`;
+  const f = $('#pvf'); if (f) { f.innerHTML = feedHTML(p.feed, 'pvf', visible(p.feed.items), sceneCard); watch(); }
+}
+
+function sceneV(s) {
+  if (!s) return '';
+  const key = s.studio && CATALOG.map(c => c.key).find(k => S.sites && S.sites[k] && idsFor([k], false).includes(s.studio.id));
+  const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
+  const link = (u, l, cls) => /^https?:\/\//.test(u) ? `<a class="btn ${cls}" style="text-decoration:none" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${l}</a>` : '';
+  return `<div class="cover">${im(s.bg || s.img)}</div><h2 class="ttl">${esc(s.title)}</h2>
+<div class="dim2">${esc([s.studio && s.studio.name, s.date].filter(Boolean).join('  /  '))}</div>
+<div class="row" style="margin:16px 0">${link(s.url, t('source'), 'p')}${link(s.trailer, t('trailer'), '')}</div>
+${s.desc ? `<p style="white-space:pre-line;color:#c3bfb5;margin:0 0 6px">${esc(s.desc)}</p>` : (s.full ? '' : '<i class="sk"></i><i class="sk s"></i>')}
+${s.studio ? `<div class="srow" data-act="${key ? 'studio' : ''}" data-k="${key || ''}">${s.studio.logo ? `<img class="logo" referrerpolicy="no-referrer" src="${esc(s.studio.logo)}" alt="">` : '<div class="logo"></div>'}<div style="flex:1"><b>${esc(s.studio.name)}</b></div>${key ? '<span class="meta">›</span>' : ''}</div>` : ''}
+${s.perfs.length ? `<h2>${t('cast')}</h2><div class="pg">${s.perfs.map(p => perfCard(p)).join('')}</div>` : ''}
+${s.tags && s.tags.length ? `<h2>${t('tags')}</h2><div>${s.tags.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</div>` : ''}
+<dl class="kv">${row(t('date'), s.date)}${row(t('min'), s.mins ? s.mins + ' ' + t('min') : '')}${row(t('director'), s.director)}${row(t('idl'), s.id)}</dl>`;
+}
+
+function studiosV() {
+  return `<div class="row" style="justify-content:space-between;margin-bottom:10px"><span class="meta">${S.sitesAt ? t('cachedAt') + ': ' + new Date(S.sitesAt).toLocaleDateString() : ''}</span><button class="btn" data-act="resolve">${t('refresh')}</button></div>
+${R.resolving ? `<p class="empty">${t('resolving')}</p>` : ''}${R.siteErr ? `<div class="err">${esc(errMsg(R.siteErr))}</div>` : ''}
+${CATALOG.map(c => {
+    const s = S.sites && S.sites[c.key]; const r = s && s.recs[0];
+    return `<div class="srow" data-act="${s && s.ids.length ? 'studio' : ''}" data-k="${c.key}">${r && r.logo ? `<img class="logo" loading="lazy" referrerpolicy="no-referrer" src="${esc(r.logo)}" alt="">` : '<div class="logo"></div>'}
+<div style="flex:1;min-width:0"><b>${esc(c.name)}</b><div class="meta">${s && s.ids.length ? t('idl') + ': ' + esc(s.ids.join(', ')) + (s.kids.length ? ' · ' + t('children') + ': ' + s.kids.length : '') : (R.resolving ? '…' : t('notFound'))}</div></div>${s && s.ids.length ? '<span class="meta">›</span>' : ''}</div>`;
+  }).join('')}`;
+}
+function studioV(key) {
+  if (!ST.has(key)) { const f = new Feed((p, s) => fetchScenes({q:'', page:p, signal:s, keys:[key]}), () => updateST()); ST.set(key, f); f.next(); }
+  return '<div id="stf"></div>';
+}
+function updateST() { const c = cur(); if (c.v !== 'studio') return; const f = ST.get(c.a), el = $('#stf'); if (el) { el.innerHTML = feedHTML(f, 'stf', f.items, sceneCard); watch(); } }
+
+function settingsV() {
+  const sel = (id, opts, v) => `<select id="${id}">${opts.map(([a, b]) => `<option value="${a}" ${v === a ? 'selected' : ''}>${b}</option>`).join('')}</select>`;
+  return `<div class="panel" style="padding:0 16px"><div class="set"><span>${t('lang')}</span>${sel('s_lang', [['ar', 'العربية'], ['en', 'English']], S.lang)}</div>
+<div class="set"><span>${t('theme')}</span>${sel('s_theme', [['oled', t('oled')], ['dim', t('dim')]], S.theme)}</div>
+<div class="set"><span>${t('defType')}</span>${sel('s_type', [['all', t('all')], ['scenes', t('scenes')], ['performers', t('performers')]], S.type)}</div>
+<div class="set"><span>${t('layout')}</span>${sel('s_view', [['grid', t('grid')], ['list', t('list')]], S.view)}</div>
+<div class="set"><span>${t('studios')}</span><button class="btn" data-act="nav" data-v="studios">›</button></div>
+<div class="set"><span>${t('saveDef')} (${S.sel.length})</span><button class="btn" data-act="savedef">OK</button></div>
+<div class="set" style="flex-wrap:wrap"><span>${t('token')}</span><div class="row" style="flex:1 1 100%"><input id="tok" class="inp" type="password" autocomplete="off" placeholder="${S.token ? '••••••••' : 'default'}" style="flex:1;width:auto"><button class="btn p" data-act="savetok">${t('saveTok')}</button></div></div></div>
+<div class="row" style="margin:14px 0"><button class="btn" data-act="clearhist">${t('clearHist')}</button><button class="btn" data-act="clearcache">${t('clearCache')}</button></div>
+<h2>${t('debug')}</h2><div class="dbg">${esc(R.log.join('\n') || '—')}</div>`;
+}
+
+/* ================= EVENTS ================= */
+const toast = {};
+function pushRecent(kind, o) {
+  const key = kind === 'S' ? 'recS' : 'recP';
+  S[key] = [o, ...S[key].filter(x => x.id !== o.id)].slice(0, 20); save();
+}
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, id = el.dataset.id, k = el.dataset.k;
+  if (navigator.vibrate && (a === 'nav' || a === 'fav')) navigator.vibrate(8);
+  switch (a) {
+    case 'nav': if (stack.length === 1 && cur().v === el.dataset.v) scrollTo({top:0, behavior:'smooth'}); else root(el.dataset.v); break;
+    case 'fav': { const c = cur(), isS = c.v === 'scene', m = isS ? S.favS : S.favP; if (m[c.a]) delete m[c.a]; else { const o = isS ? SC.get(c.a) : PF.get(c.a); if (o) m[c.a] = o; } save(); el.classList.toggle('on', !!m[c.a]); break; }
+    case 'back': if (stack.length > 1) history.back(); else root('search'); break;
+    case 'go': go(el.dataset.v); break;
+    case 'filters': R.fo = !R.fo; $('#fpan').innerHTML = R.fo ? filtHTML() : ''; break;
+    case 'scene': { const s = SC.get(id); if (s) { pushRecent('S', s); addHist(R.q); go('scene', id); } break; }
+    case 'perf': { const p = PF.get(id); if (p) pushRecent('P', {id:p.id, name:p.name, img:p.img}); addHist(R.q); go('perf', id); break; }
+    case 'studio': go('studio', k); break;
+    case 'type': S.type = k; save(); if (cur().v === 'search') { render(); runSearch(true); } break;
+    case 'panel': R.panel = !R.panel; { const sp = $('#sp'); if (sp) sp.outerHTML = panelHTML(); } break;
+    case 'adv': R.adv = !R.adv; render(); break;
+    case 'selall': S.sel = CATALOG.filter(c => S.sites && S.sites[c.key] && S.sites[c.key].ids.length).map(c => c.key); save(); refreshStudioUI(); onFilter(); break;
+    case 'vmg': S.sel = CATALOG.filter(c => S.sites && S.sites[c.key] && S.sites[c.key].ids.length).map(c => c.key); save(); refreshStudioUI(); onFilter(); break;
+    case 'selnone': S.sel = []; save(); refreshStudioUI(); onFilter(); break;
+    case 'resetf': S.sel = []; S.hideUnknown = false; R.fy = ''; R.fr = ''; R.sort = 'rel'; save(); if ($('#hu')) $('#hu').checked = false; refreshStudioUI(); onFilter(); break;
+    case 'quick': S.sel = S.sel.includes(k) ? S.sel.filter(x => x !== k) : [...S.sel, k]; save(); root('search'); R.q = R.q; runSearch(true); break;
+    case 'hq': R.q = el.dataset.q; if (cur().v !== 'search') root('search'); else render(); $('#q').value = R.q; runSearch(true); break;
+    case 'clearhist': S.hist = []; save(); render(); break;
+    case 'retry': { const f = k === undefined ? el.dataset.f : el.dataset.f; const feed = f === 'sf' ? R.sf : f === 'pf' ? R.pf : f === 'stf' ? ST.get(cur().a) : f === 'pvf' ? getPV(cur().a).feed : null;
+      if (feed) { feed.err = null; feed.next(); } else if (f === 'pvd') { PV.delete(cur().a); render(); } break; }
+    case 'resolve': resolveStudios(true); break;
+    case 'savedef': S.defSel = [...S.sel]; save(); el.textContent = '✓'; break;
+    case 'savetok': { const v = $('#tok').value.trim(); if (v) { S.token = v; cache.clear(); save(); $('#tok').value = ''; $('#tok').placeholder = '✓'; } break; }
+    case 'clearcache': cache.clear(); S.sites = null; S.sitesAt = 0; S.recP = []; S.recS = []; PV.clear(); ST.clear(); save(); el.textContent = '✓'; resolveStudios(true); break;
+  }
+});
+let deb;
+document.addEventListener('input', e => {
+  const id = e.target.id;
+  if (id === 'q') { const a = !!(e.target.value.trim() || effSel().length); $('#top').classList.toggle('act', a); $('#main').classList.toggle('idle', !a); clearTimeout(deb); deb = setTimeout(() => runSearch(), 450); }
+  if (id === 'ss') { const l = $('#sl'); if (l) l.innerHTML = listHTML(e.target.value); }
+});
+document.addEventListener('keydown', e => { if (e.target.id === 'q' && e.key === 'Enter') { clearTimeout(deb); addHist(e.target.value.trim()); runSearch(); e.target.blur(); } });
+document.addEventListener('change', e => {
+  const el = e.target, id = el.id;
+  if (el.classList.contains('cbst')) { const k = el.dataset.k; S.sel = el.checked ? [...new Set([...S.sel, k])] : S.sel.filter(x => x !== k); save(); document.querySelectorAll('.scount').forEach(x => x.textContent = S.sel.length); onFilter(); }
+  else if (id === 'hu') { S.hideUnknown = el.checked; save(); onFilter(); }
+  else if (id === 'sort') { R.sort = el.value; updateRes(); }
+  else if (id === 'fy') { R.fy = el.value.trim(); updateRes(); }
+  else if (id === 'fr') { R.fr = el.value.trim(); updateRes(); }
+  else if (id === 's_lang') { S.lang = el.value; save(); render(); }
+  else if (id === 's_theme') { S.theme = el.value; save(); render(); }
+  else if (id === 's_type') { S.type = el.value; save(); }
+  else if (id === 's_view') { S.view = el.value; save(); }
+});
+
+/* ================= START ================= */
+render();
+resolveStudios(false);
+</script>
+</body>
+</html>
